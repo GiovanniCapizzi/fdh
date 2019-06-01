@@ -1,0 +1,1127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.2" />
+<title>fdh.file_helper API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fdh.file_helper</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">from abc import ABC, abstractmethod
+import soundfile as sf
+import numpy as np
+
+&#34;&#34;&#34;
+    Generic class for handling audio files in the script.
+&#34;&#34;&#34;
+class IFileHelper(ABC):
+
+    @abstractmethod
+    def write_audio_file(self, filename: str, y:np.ndarray, fs:int):
+        &#34;&#34;&#34;
+            Generic audio write method. 
+
+            Parameters
+            ----------
+            filename: str
+                Filepath for the output file
+            y: np.ndarray
+                Numpy array data to write as audio file. 
+            fs: int
+                Frequency sample: eg. 44100
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def read_audio_file(self, filename: str):
+        &#34;&#34;&#34;
+            Generic audio read method. 
+
+            Parameters
+            ----------
+            filename: str
+                File path for the input file
+            
+            Returns
+            -------
+            It should return the numpy array of the read signal.
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def write_file(self, filename: str, data:np.ndarray):
+        &#34;&#34;&#34;
+            Generic binary write method. It is used to restore the original hidden data: eg. .jpg, .png, .mp3...
+
+            Parameters
+            ----------
+            filename: str
+                File path for the output file with the extension: eg. photo.jpg
+            data: np.ndarray:
+                Numpy array data to write.
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def read_file(self, filename: str):
+        &#34;&#34;&#34;
+            Generic binary read method. It is used to read the original message you want to encode: eg. .jpg, .png, .mp3...
+
+            Parameters
+            ----------
+            filename: str
+                File path for the input file with the extension: eg. photo.jpg
+            
+            Returns
+            -------
+            It should return the numpy array of the read binary file.
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def sum(self, base_file: str, encoded_file: str, output_file: str, message_location: int = 0):
+        &#34;&#34;&#34;
+            Generic sum between signals. Here you must implement the way you wish to sum two signals hiding one in in another.
+
+            Parameters
+            ----------
+            base_file: str
+                File path for the carrier signal file.
+            encoded_file: str
+                Path of the encoded file you want to hide in base_file.
+            output_file: str
+                Path of the result output.
+            message_location: int:
+                Position in seconds in which you want to hide the message. The default position is 0s.
+            
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def sub(self, output_file: str, base_file: str, restored_encoded_file: str, 
+            message_width: int = 0, message_location: int = 0):
+        &#34;&#34;&#34;
+            Generic subtraction between signals.
+
+            Parameters
+            ----------
+            output_file: str
+                Path of the result output.
+            base_file: str
+                File path for the original carrier signal file used in the &#39;sum&#39; process.
+            restored_encoded_file: str
+                Path of the restored encoded file.
+            message_width: int
+                Message width of the hidden message, it must be known as a parameter used in the encoding process.
+                Basically you must know how much is long (in samples) the file you hide in the carriel signal.
+            message_location: int:
+                Position in seconds in which you hide the message. The default position is 0s.
+            
+        &#34;&#34;&#34;
+        pass
+
+
+class BinWav(IFileHelper):
+
+    def __init__(self, pad_size:int=8):
+        &#34;&#34;&#34;
+            Simple constructor which initialize the pad size for the binary read informations.
+
+            Parameters
+            ----------
+            pad_size: int
+                Number of zero-padding to add in the read bytes.
+            
+        &#34;&#34;&#34;
+        if pad_size&lt;8:
+            print(&#34;Warning, using a pad_size of %d can cause data loss.&#34;%(pad_size,))
+        self.pad_size = pad_size
+
+    def write_audio_file(self, filename: str, y, fs):
+        &#34;&#34;&#34;
+            Write a wav file
+
+            Parameters
+            ----------
+            filename: str
+                Filepath for the output wav file
+            y: np.ndarray
+                Numpy array data to write as wav file. 
+            fs: int
+                Frequency sample: eg. 44100
+        &#34;&#34;&#34;
+        sf.write(filename, y, fs)
+
+    def read_audio_file(self, filename: str):
+        &#34;&#34;&#34;
+            Read a wav file
+
+            Parameters
+            ----------
+            filename: str
+                File path for the input file
+            
+            Returns
+            -------
+            out : np.ndarray
+                A numpy array containing the read wav samples, using soundfile it contains floats between 0 and 1.
+        &#34;&#34;&#34;
+        return sf.read(filename)
+
+    def write_file(self, filename: str, data:np.ndarray):
+        &#34;&#34;&#34;
+            Write a binary file. It is not a generical method and it must be used with the encoded message.
+
+            Parameters
+            ----------
+            filename: str
+                File path for the restored data file with the extension: eg. photo.jpg
+            data: np.ndarray:
+                Numpy array data to write.
+        &#34;&#34;&#34;
+        message: list = []
+        for i in range(0, len(data), self.pad_size):
+            s = &#39;0b&#39; + data[i:i + self.pad_size]
+            message.append(int(s, 2))
+        with open(filename, &#39;wb&#39;) as f:
+            f.write(bytearray(message))
+        
+    def read_file(self, filename: str):
+        &#34;&#34;&#34;
+            Read the original message you want to encode: eg. .jpg, .png, .mp3...
+            It translate the read bytes to a message encoded as binary string sequence of 0 and 1.
+
+            Parameters
+            ----------
+            filename: str
+                File path for the input file with the extension: eg. photo.jpg
+            
+            Returns
+            -------
+            out: str
+                The read file bytes as a string message of zeros and ones: eg. &#39;1010101001010011100100&#39;.
+        &#34;&#34;&#34;
+        with open(filename, &#39;rb&#39;) as f:  # read binary data
+            raw = f.read()
+            data = &#39;&#39;.join([bin(raw[i])[2:].zfill(self.pad_size) for i in range(len(raw))])
+        return data
+
+    def sum(self, base_file: str, encoded_file: str, output_file: str, message_location: int = 0):
+        &#34;&#34;&#34;
+            Sum between wav signals.
+
+            Parameters
+            ----------
+            base_file: str
+                File path for the carrier signal file.
+            encoded_file: str
+                Path of the encoded file you want to hide in base_file.
+            output_file: str
+                Path of the result output.
+            message_location: int:
+                Position in seconds in which you want to hide the message. The default position is 0s.
+            
+        &#34;&#34;&#34;
+        if not base_file:
+            raise ValueError(&#34;Base file not found!&#34;)
+
+        y0, fs0 = sf.read(base_file)
+        y1, fs1 = sf.read(encoded_file)
+
+        if message_location &gt; y0.size - y1.size:
+            raise ValueError(&#34;Message location is out of bound for base_file.&#34;)
+
+        if y0.size &lt; y1.size:
+            raise ValueError(&#34;Base file is too short for this message!&#34;)
+
+        if fs0 != fs1:
+            raise ValueError(&#34;Can&#39;t use different frequency samples!&#34;)
+
+        s1 = np.zeros(y0.size)      
+        message_width = y1.size  # in samples!
+
+        s1[int(message_location * fs0):int(message_location * fs0) + message_width] = y1
+        ss = s1 + 0.25 * y0
+
+        # Writing File
+        self.write_audio_file(output_file, y=ss, fs=fs0)
+        return message_width
+
+    def sub(self, output_file: str, base_file: str, restored_encoded_file: str, 
+            message_width: int = 0, message_location: int = 0):
+        &#34;&#34;&#34;
+            Subtraction between wav signals.
+
+            Parameters
+            ----------
+            output_file: str
+                Path of the result output.
+            base_file: str
+                File path for the original carrier signal file used in the &#39;sum&#39; process.
+            restored_encoded_file: str
+                Path of the restored encoded file.
+            message_width: int
+                Message width of the hidden message, it must be known as a parameter used in the encoding process.
+                Basically you must know how much is long (in samples) the file you hide in the carriel signal.
+            message_location: int:
+                Position in seconds in which you hide the message. The default position is 0s.
+            
+        &#34;&#34;&#34;
+
+        if not base_file:
+            raise ValueError(&#34;Base file not found!&#34;)
+
+        y0, fs0 = sf.read(base_file)
+        y1, fs1 = sf.read(output_file)
+
+        s1 = y1 - 0.25 * y0
+        ss = s1[int(message_location * fs0):int(message_location * fs0) + message_width]
+
+        # Writing File
+        self.write_audio_file(restored_encoded_file, y=ss, fs=fs0)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="fdh.file_helper.BinWav"><code class="flex name class">
+<span>class <span class="ident">BinWav</span></span>
+<span>(</span><span>pad_size=8)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<p>Simple constructor which initialize the pad size for the binary read informations.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>pad_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of zero-padding to add in the read bytes.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class BinWav(IFileHelper):
+
+    def __init__(self, pad_size:int=8):
+        &#34;&#34;&#34;
+            Simple constructor which initialize the pad size for the binary read informations.
+
+            Parameters
+            ----------
+            pad_size: int
+                Number of zero-padding to add in the read bytes.
+            
+        &#34;&#34;&#34;
+        if pad_size&lt;8:
+            print(&#34;Warning, using a pad_size of %d can cause data loss.&#34;%(pad_size,))
+        self.pad_size = pad_size
+
+    def write_audio_file(self, filename: str, y, fs):
+        &#34;&#34;&#34;
+            Write a wav file
+
+            Parameters
+            ----------
+            filename: str
+                Filepath for the output wav file
+            y: np.ndarray
+                Numpy array data to write as wav file. 
+            fs: int
+                Frequency sample: eg. 44100
+        &#34;&#34;&#34;
+        sf.write(filename, y, fs)
+
+    def read_audio_file(self, filename: str):
+        &#34;&#34;&#34;
+            Read a wav file
+
+            Parameters
+            ----------
+            filename: str
+                File path for the input file
+            
+            Returns
+            -------
+            out : np.ndarray
+                A numpy array containing the read wav samples, using soundfile it contains floats between 0 and 1.
+        &#34;&#34;&#34;
+        return sf.read(filename)
+
+    def write_file(self, filename: str, data:np.ndarray):
+        &#34;&#34;&#34;
+            Write a binary file. It is not a generical method and it must be used with the encoded message.
+
+            Parameters
+            ----------
+            filename: str
+                File path for the restored data file with the extension: eg. photo.jpg
+            data: np.ndarray:
+                Numpy array data to write.
+        &#34;&#34;&#34;
+        message: list = []
+        for i in range(0, len(data), self.pad_size):
+            s = &#39;0b&#39; + data[i:i + self.pad_size]
+            message.append(int(s, 2))
+        with open(filename, &#39;wb&#39;) as f:
+            f.write(bytearray(message))
+        
+    def read_file(self, filename: str):
+        &#34;&#34;&#34;
+            Read the original message you want to encode: eg. .jpg, .png, .mp3...
+            It translate the read bytes to a message encoded as binary string sequence of 0 and 1.
+
+            Parameters
+            ----------
+            filename: str
+                File path for the input file with the extension: eg. photo.jpg
+            
+            Returns
+            -------
+            out: str
+                The read file bytes as a string message of zeros and ones: eg. &#39;1010101001010011100100&#39;.
+        &#34;&#34;&#34;
+        with open(filename, &#39;rb&#39;) as f:  # read binary data
+            raw = f.read()
+            data = &#39;&#39;.join([bin(raw[i])[2:].zfill(self.pad_size) for i in range(len(raw))])
+        return data
+
+    def sum(self, base_file: str, encoded_file: str, output_file: str, message_location: int = 0):
+        &#34;&#34;&#34;
+            Sum between wav signals.
+
+            Parameters
+            ----------
+            base_file: str
+                File path for the carrier signal file.
+            encoded_file: str
+                Path of the encoded file you want to hide in base_file.
+            output_file: str
+                Path of the result output.
+            message_location: int:
+                Position in seconds in which you want to hide the message. The default position is 0s.
+            
+        &#34;&#34;&#34;
+        if not base_file:
+            raise ValueError(&#34;Base file not found!&#34;)
+
+        y0, fs0 = sf.read(base_file)
+        y1, fs1 = sf.read(encoded_file)
+
+        if message_location &gt; y0.size - y1.size:
+            raise ValueError(&#34;Message location is out of bound for base_file.&#34;)
+
+        if y0.size &lt; y1.size:
+            raise ValueError(&#34;Base file is too short for this message!&#34;)
+
+        if fs0 != fs1:
+            raise ValueError(&#34;Can&#39;t use different frequency samples!&#34;)
+
+        s1 = np.zeros(y0.size)      
+        message_width = y1.size  # in samples!
+
+        s1[int(message_location * fs0):int(message_location * fs0) + message_width] = y1
+        ss = s1 + 0.25 * y0
+
+        # Writing File
+        self.write_audio_file(output_file, y=ss, fs=fs0)
+        return message_width
+
+    def sub(self, output_file: str, base_file: str, restored_encoded_file: str, 
+            message_width: int = 0, message_location: int = 0):
+        &#34;&#34;&#34;
+            Subtraction between wav signals.
+
+            Parameters
+            ----------
+            output_file: str
+                Path of the result output.
+            base_file: str
+                File path for the original carrier signal file used in the &#39;sum&#39; process.
+            restored_encoded_file: str
+                Path of the restored encoded file.
+            message_width: int
+                Message width of the hidden message, it must be known as a parameter used in the encoding process.
+                Basically you must know how much is long (in samples) the file you hide in the carriel signal.
+            message_location: int:
+                Position in seconds in which you hide the message. The default position is 0s.
+            
+        &#34;&#34;&#34;
+
+        if not base_file:
+            raise ValueError(&#34;Base file not found!&#34;)
+
+        y0, fs0 = sf.read(base_file)
+        y1, fs1 = sf.read(output_file)
+
+        s1 = y1 - 0.25 * y0
+        ss = s1[int(message_location * fs0):int(message_location * fs0) + message_width]
+
+        # Writing File
+        self.write_audio_file(restored_encoded_file, y=ss, fs=fs0)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="fdh.file_helper.IFileHelper" href="#fdh.file_helper.IFileHelper">IFileHelper</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="fdh.file_helper.BinWav.read_audio_file"><code class="name flex">
+<span>def <span class="ident">read_audio_file</span></span>(<span>self, filename)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Read a wav file</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the input file</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>A numpy array containing the read wav samples, using soundfile it contains floats between 0 and 1.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def read_audio_file(self, filename: str):
+    &#34;&#34;&#34;
+        Read a wav file
+
+        Parameters
+        ----------
+        filename: str
+            File path for the input file
+        
+        Returns
+        -------
+        out : np.ndarray
+            A numpy array containing the read wav samples, using soundfile it contains floats between 0 and 1.
+    &#34;&#34;&#34;
+    return sf.read(filename)</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.BinWav.read_file"><code class="name flex">
+<span>def <span class="ident">read_file</span></span>(<span>self, filename)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Read the original message you want to encode: eg. .jpg, .png, .mp3&hellip;
+It translate the read bytes to a message encoded as binary string sequence of 0 and 1.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the input file with the extension: eg. photo.jpg</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>str</code></dt>
+<dd>The read file bytes as a string message of zeros and ones: eg. '1010101001010011100100'.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def read_file(self, filename: str):
+    &#34;&#34;&#34;
+        Read the original message you want to encode: eg. .jpg, .png, .mp3...
+        It translate the read bytes to a message encoded as binary string sequence of 0 and 1.
+
+        Parameters
+        ----------
+        filename: str
+            File path for the input file with the extension: eg. photo.jpg
+        
+        Returns
+        -------
+        out: str
+            The read file bytes as a string message of zeros and ones: eg. &#39;1010101001010011100100&#39;.
+    &#34;&#34;&#34;
+    with open(filename, &#39;rb&#39;) as f:  # read binary data
+        raw = f.read()
+        data = &#39;&#39;.join([bin(raw[i])[2:].zfill(self.pad_size) for i in range(len(raw))])
+    return data</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.BinWav.sub"><code class="name flex">
+<span>def <span class="ident">sub</span></span>(<span>self, output_file, base_file, restored_encoded_file, message_width=0, message_location=0)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Subtraction between wav signals.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>output_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path of the result output.</dd>
+<dt><strong><code>base_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the original carrier signal file used in the 'sum' process.</dd>
+<dt><strong><code>restored_encoded_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path of the restored encoded file.</dd>
+<dt><strong><code>message_width</code></strong> :&ensp;<code>int</code></dt>
+<dd>Message width of the hidden message, it must be known as a parameter used in the encoding process.
+Basically you must know how much is long (in samples) the file you hide in the carriel signal.</dd>
+<dt><strong><code>message_location</code></strong> :&ensp;<code>int</code>:</dt>
+<dd>Position in seconds in which you hide the message. The default position is 0s.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def sub(self, output_file: str, base_file: str, restored_encoded_file: str, 
+        message_width: int = 0, message_location: int = 0):
+    &#34;&#34;&#34;
+        Subtraction between wav signals.
+
+        Parameters
+        ----------
+        output_file: str
+            Path of the result output.
+        base_file: str
+            File path for the original carrier signal file used in the &#39;sum&#39; process.
+        restored_encoded_file: str
+            Path of the restored encoded file.
+        message_width: int
+            Message width of the hidden message, it must be known as a parameter used in the encoding process.
+            Basically you must know how much is long (in samples) the file you hide in the carriel signal.
+        message_location: int:
+            Position in seconds in which you hide the message. The default position is 0s.
+        
+    &#34;&#34;&#34;
+
+    if not base_file:
+        raise ValueError(&#34;Base file not found!&#34;)
+
+    y0, fs0 = sf.read(base_file)
+    y1, fs1 = sf.read(output_file)
+
+    s1 = y1 - 0.25 * y0
+    ss = s1[int(message_location * fs0):int(message_location * fs0) + message_width]
+
+    # Writing File
+    self.write_audio_file(restored_encoded_file, y=ss, fs=fs0)</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.BinWav.sum"><code class="name flex">
+<span>def <span class="ident">sum</span></span>(<span>self, base_file, encoded_file, output_file, message_location=0)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Sum between wav signals.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>base_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the carrier signal file.</dd>
+<dt><strong><code>encoded_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path of the encoded file you want to hide in base_file.</dd>
+<dt><strong><code>output_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path of the result output.</dd>
+<dt><strong><code>message_location</code></strong> :&ensp;<code>int</code>:</dt>
+<dd>Position in seconds in which you want to hide the message. The default position is 0s.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def sum(self, base_file: str, encoded_file: str, output_file: str, message_location: int = 0):
+    &#34;&#34;&#34;
+        Sum between wav signals.
+
+        Parameters
+        ----------
+        base_file: str
+            File path for the carrier signal file.
+        encoded_file: str
+            Path of the encoded file you want to hide in base_file.
+        output_file: str
+            Path of the result output.
+        message_location: int:
+            Position in seconds in which you want to hide the message. The default position is 0s.
+        
+    &#34;&#34;&#34;
+    if not base_file:
+        raise ValueError(&#34;Base file not found!&#34;)
+
+    y0, fs0 = sf.read(base_file)
+    y1, fs1 = sf.read(encoded_file)
+
+    if message_location &gt; y0.size - y1.size:
+        raise ValueError(&#34;Message location is out of bound for base_file.&#34;)
+
+    if y0.size &lt; y1.size:
+        raise ValueError(&#34;Base file is too short for this message!&#34;)
+
+    if fs0 != fs1:
+        raise ValueError(&#34;Can&#39;t use different frequency samples!&#34;)
+
+    s1 = np.zeros(y0.size)      
+    message_width = y1.size  # in samples!
+
+    s1[int(message_location * fs0):int(message_location * fs0) + message_width] = y1
+    ss = s1 + 0.25 * y0
+
+    # Writing File
+    self.write_audio_file(output_file, y=ss, fs=fs0)
+    return message_width</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.BinWav.write_audio_file"><code class="name flex">
+<span>def <span class="ident">write_audio_file</span></span>(<span>self, filename, y, fs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Write a wav file</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>Filepath for the output wav file</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Numpy array data to write as wav file.</dd>
+<dt><strong><code>fs</code></strong> :&ensp;<code>int</code></dt>
+<dd>Frequency sample: eg. 44100</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def write_audio_file(self, filename: str, y, fs):
+    &#34;&#34;&#34;
+        Write a wav file
+
+        Parameters
+        ----------
+        filename: str
+            Filepath for the output wav file
+        y: np.ndarray
+            Numpy array data to write as wav file. 
+        fs: int
+            Frequency sample: eg. 44100
+    &#34;&#34;&#34;
+    sf.write(filename, y, fs)</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.BinWav.write_file"><code class="name flex">
+<span>def <span class="ident">write_file</span></span>(<span>self, filename, data)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Write a binary file. It is not a generical method and it must be used with the encoded message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the restored data file with the extension: eg. photo.jpg</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code>:</dt>
+<dd>Numpy array data to write.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def write_file(self, filename: str, data:np.ndarray):
+    &#34;&#34;&#34;
+        Write a binary file. It is not a generical method and it must be used with the encoded message.
+
+        Parameters
+        ----------
+        filename: str
+            File path for the restored data file with the extension: eg. photo.jpg
+        data: np.ndarray:
+            Numpy array data to write.
+    &#34;&#34;&#34;
+    message: list = []
+    for i in range(0, len(data), self.pad_size):
+        s = &#39;0b&#39; + data[i:i + self.pad_size]
+        message.append(int(s, 2))
+    with open(filename, &#39;wb&#39;) as f:
+        f.write(bytearray(message))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fdh.file_helper.IFileHelper"><code class="flex name class">
+<span>class <span class="ident">IFileHelper</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class IFileHelper(ABC):
+
+    @abstractmethod
+    def write_audio_file(self, filename: str, y:np.ndarray, fs:int):
+        &#34;&#34;&#34;
+            Generic audio write method. 
+
+            Parameters
+            ----------
+            filename: str
+                Filepath for the output file
+            y: np.ndarray
+                Numpy array data to write as audio file. 
+            fs: int
+                Frequency sample: eg. 44100
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def read_audio_file(self, filename: str):
+        &#34;&#34;&#34;
+            Generic audio read method. 
+
+            Parameters
+            ----------
+            filename: str
+                File path for the input file
+            
+            Returns
+            -------
+            It should return the numpy array of the read signal.
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def write_file(self, filename: str, data:np.ndarray):
+        &#34;&#34;&#34;
+            Generic binary write method. It is used to restore the original hidden data: eg. .jpg, .png, .mp3...
+
+            Parameters
+            ----------
+            filename: str
+                File path for the output file with the extension: eg. photo.jpg
+            data: np.ndarray:
+                Numpy array data to write.
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def read_file(self, filename: str):
+        &#34;&#34;&#34;
+            Generic binary read method. It is used to read the original message you want to encode: eg. .jpg, .png, .mp3...
+
+            Parameters
+            ----------
+            filename: str
+                File path for the input file with the extension: eg. photo.jpg
+            
+            Returns
+            -------
+            It should return the numpy array of the read binary file.
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def sum(self, base_file: str, encoded_file: str, output_file: str, message_location: int = 0):
+        &#34;&#34;&#34;
+            Generic sum between signals. Here you must implement the way you wish to sum two signals hiding one in in another.
+
+            Parameters
+            ----------
+            base_file: str
+                File path for the carrier signal file.
+            encoded_file: str
+                Path of the encoded file you want to hide in base_file.
+            output_file: str
+                Path of the result output.
+            message_location: int:
+                Position in seconds in which you want to hide the message. The default position is 0s.
+            
+        &#34;&#34;&#34;
+        pass
+
+    @abstractmethod
+    def sub(self, output_file: str, base_file: str, restored_encoded_file: str, 
+            message_width: int = 0, message_location: int = 0):
+        &#34;&#34;&#34;
+            Generic subtraction between signals.
+
+            Parameters
+            ----------
+            output_file: str
+                Path of the result output.
+            base_file: str
+                File path for the original carrier signal file used in the &#39;sum&#39; process.
+            restored_encoded_file: str
+                Path of the restored encoded file.
+            message_width: int
+                Message width of the hidden message, it must be known as a parameter used in the encoding process.
+                Basically you must know how much is long (in samples) the file you hide in the carriel signal.
+            message_location: int:
+                Position in seconds in which you hide the message. The default position is 0s.
+            
+        &#34;&#34;&#34;
+        pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="fdh.file_helper.BinWav" href="#fdh.file_helper.BinWav">BinWav</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="fdh.file_helper.IFileHelper.read_audio_file"><code class="name flex">
+<span>def <span class="ident">read_audio_file</span></span>(<span>self, filename)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generic audio read method. </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the input file</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>It should return the numpy array of the read signal.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def read_audio_file(self, filename: str):
+    &#34;&#34;&#34;
+        Generic audio read method. 
+
+        Parameters
+        ----------
+        filename: str
+            File path for the input file
+        
+        Returns
+        -------
+        It should return the numpy array of the read signal.
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.IFileHelper.read_file"><code class="name flex">
+<span>def <span class="ident">read_file</span></span>(<span>self, filename)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generic binary read method. It is used to read the original message you want to encode: eg. .jpg, .png, .mp3&hellip;</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the input file with the extension: eg. photo.jpg</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>It should return the numpy array of the read binary file.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def read_file(self, filename: str):
+    &#34;&#34;&#34;
+        Generic binary read method. It is used to read the original message you want to encode: eg. .jpg, .png, .mp3...
+
+        Parameters
+        ----------
+        filename: str
+            File path for the input file with the extension: eg. photo.jpg
+        
+        Returns
+        -------
+        It should return the numpy array of the read binary file.
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.IFileHelper.sub"><code class="name flex">
+<span>def <span class="ident">sub</span></span>(<span>self, output_file, base_file, restored_encoded_file, message_width=0, message_location=0)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generic subtraction between signals.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>output_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path of the result output.</dd>
+<dt><strong><code>base_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the original carrier signal file used in the 'sum' process.</dd>
+<dt><strong><code>restored_encoded_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path of the restored encoded file.</dd>
+<dt><strong><code>message_width</code></strong> :&ensp;<code>int</code></dt>
+<dd>Message width of the hidden message, it must be known as a parameter used in the encoding process.
+Basically you must know how much is long (in samples) the file you hide in the carriel signal.</dd>
+<dt><strong><code>message_location</code></strong> :&ensp;<code>int</code>:</dt>
+<dd>Position in seconds in which you hide the message. The default position is 0s.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def sub(self, output_file: str, base_file: str, restored_encoded_file: str, 
+        message_width: int = 0, message_location: int = 0):
+    &#34;&#34;&#34;
+        Generic subtraction between signals.
+
+        Parameters
+        ----------
+        output_file: str
+            Path of the result output.
+        base_file: str
+            File path for the original carrier signal file used in the &#39;sum&#39; process.
+        restored_encoded_file: str
+            Path of the restored encoded file.
+        message_width: int
+            Message width of the hidden message, it must be known as a parameter used in the encoding process.
+            Basically you must know how much is long (in samples) the file you hide in the carriel signal.
+        message_location: int:
+            Position in seconds in which you hide the message. The default position is 0s.
+        
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.IFileHelper.sum"><code class="name flex">
+<span>def <span class="ident">sum</span></span>(<span>self, base_file, encoded_file, output_file, message_location=0)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generic sum between signals. Here you must implement the way you wish to sum two signals hiding one in in another.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>base_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the carrier signal file.</dd>
+<dt><strong><code>encoded_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path of the encoded file you want to hide in base_file.</dd>
+<dt><strong><code>output_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path of the result output.</dd>
+<dt><strong><code>message_location</code></strong> :&ensp;<code>int</code>:</dt>
+<dd>Position in seconds in which you want to hide the message. The default position is 0s.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def sum(self, base_file: str, encoded_file: str, output_file: str, message_location: int = 0):
+    &#34;&#34;&#34;
+        Generic sum between signals. Here you must implement the way you wish to sum two signals hiding one in in another.
+
+        Parameters
+        ----------
+        base_file: str
+            File path for the carrier signal file.
+        encoded_file: str
+            Path of the encoded file you want to hide in base_file.
+        output_file: str
+            Path of the result output.
+        message_location: int:
+            Position in seconds in which you want to hide the message. The default position is 0s.
+        
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.IFileHelper.write_audio_file"><code class="name flex">
+<span>def <span class="ident">write_audio_file</span></span>(<span>self, filename, y, fs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generic audio write method. </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>Filepath for the output file</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Numpy array data to write as audio file.</dd>
+<dt><strong><code>fs</code></strong> :&ensp;<code>int</code></dt>
+<dd>Frequency sample: eg. 44100</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def write_audio_file(self, filename: str, y:np.ndarray, fs:int):
+    &#34;&#34;&#34;
+        Generic audio write method. 
+
+        Parameters
+        ----------
+        filename: str
+            Filepath for the output file
+        y: np.ndarray
+            Numpy array data to write as audio file. 
+        fs: int
+            Frequency sample: eg. 44100
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+<dt id="fdh.file_helper.IFileHelper.write_file"><code class="name flex">
+<span>def <span class="ident">write_file</span></span>(<span>self, filename, data)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generic binary write method. It is used to restore the original hidden data: eg. .jpg, .png, .mp3&hellip;</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the output file with the extension: eg. photo.jpg</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code>:</dt>
+<dd>Numpy array data to write.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def write_file(self, filename: str, data:np.ndarray):
+    &#34;&#34;&#34;
+        Generic binary write method. It is used to restore the original hidden data: eg. .jpg, .png, .mp3...
+
+        Parameters
+        ----------
+        filename: str
+            File path for the output file with the extension: eg. photo.jpg
+        data: np.ndarray:
+            Numpy array data to write.
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="fdh" href="index.html">fdh</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="fdh.file_helper.BinWav" href="#fdh.file_helper.BinWav">BinWav</a></code></h4>
+<ul class="two-column">
+<li><code><a title="fdh.file_helper.BinWav.read_audio_file" href="#fdh.file_helper.BinWav.read_audio_file">read_audio_file</a></code></li>
+<li><code><a title="fdh.file_helper.BinWav.read_file" href="#fdh.file_helper.BinWav.read_file">read_file</a></code></li>
+<li><code><a title="fdh.file_helper.BinWav.sub" href="#fdh.file_helper.BinWav.sub">sub</a></code></li>
+<li><code><a title="fdh.file_helper.BinWav.sum" href="#fdh.file_helper.BinWav.sum">sum</a></code></li>
+<li><code><a title="fdh.file_helper.BinWav.write_audio_file" href="#fdh.file_helper.BinWav.write_audio_file">write_audio_file</a></code></li>
+<li><code><a title="fdh.file_helper.BinWav.write_file" href="#fdh.file_helper.BinWav.write_file">write_file</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fdh.file_helper.IFileHelper" href="#fdh.file_helper.IFileHelper">IFileHelper</a></code></h4>
+<ul class="two-column">
+<li><code><a title="fdh.file_helper.IFileHelper.read_audio_file" href="#fdh.file_helper.IFileHelper.read_audio_file">read_audio_file</a></code></li>
+<li><code><a title="fdh.file_helper.IFileHelper.read_file" href="#fdh.file_helper.IFileHelper.read_file">read_file</a></code></li>
+<li><code><a title="fdh.file_helper.IFileHelper.sub" href="#fdh.file_helper.IFileHelper.sub">sub</a></code></li>
+<li><code><a title="fdh.file_helper.IFileHelper.sum" href="#fdh.file_helper.IFileHelper.sum">sum</a></code></li>
+<li><code><a title="fdh.file_helper.IFileHelper.write_audio_file" href="#fdh.file_helper.IFileHelper.write_audio_file">write_audio_file</a></code></li>
+<li><code><a title="fdh.file_helper.IFileHelper.write_file" href="#fdh.file_helper.IFileHelper.write_file">write_file</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.2</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
