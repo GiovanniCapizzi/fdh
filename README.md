@@ -7,6 +7,14 @@
 ### Requirements
 Python 3.7
 
+### Documentation
+You can find the HTML documentation 
+<a title="visit the documentation"
+href="https://giovannicapizzi.github.io/fdh/" target="_blank" >
+here
+</a>.
+
+
 ### Install
 ```bash
 pip install numpy
